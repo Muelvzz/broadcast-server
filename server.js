@@ -1,16 +1,30 @@
-import readline from "node:readline"
+import { WebSocketServer } from "ws"
 
-import { getTerminalInput } from "./utils/getTerminalInput.js"
+import { PORT } from "./core/config.js"
 
-const r1 = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
+const wss = new WebSocketServer({ port: PORT })
+
+console.log("Server started")
+
+wss.on("connection", (ws) => {
+  console.log("New client connected");
+  ws.send("Welcome to the 'broadcast-server' Server")
+
+  ws.on("message", (message) => {
+    console.log(`Received: ${message}`)
+    ws.send(`Server received: ${message}`)
+  })
+
+  ws.on("close", () => {
+    console.log("Client disconnected")
+  })
 })
 
-r1.question("", (input) => {
-
-  const parsedInput = getTerminalInput(input)
-  console.log(parsedInput)
-  r1.close()
-
-})
+// How to create a server using WebSocket
+//    1. Import the WebSocketServer library
+//    2. Setup the port number
+//    3. Setup the WebSocketServer
+//    4. Create the WebSocketServer connection
+//        a. Initialize the connection
+//        b. create a function that receives the client request
+//        a. create a function that closes the server
