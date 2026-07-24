@@ -1,0 +1,5 @@
+What changed:
+  - Added a brief description at the package.json file
+  - Imported the WebSockets Module
+  - Imported the readline
+  - Created a function that takes input from the terminal and display it

@@ -1,7 +1,7 @@
 {
   "name": "broadcast-server",
   "version": "1.0.0",
-  "description": "",
+  "description": "personal project to learn how to use Web Sockets and real time events using Node.js",
   "license": "ISC",
   "author": "Muelvin Lopez",
   "type": "module",
@@ -9,5 +9,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
+  },
+  "dependencies": {
+    "ws": "^8.21.1"
   }
 }
