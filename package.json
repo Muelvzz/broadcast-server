@@ -11,6 +11,7 @@
     "start": "node server.js"
   },
   "dependencies": {
+    "prompt-sync": "^4.2.0",
     "ws": "^8.21.1"
   }
 }
