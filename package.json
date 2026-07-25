@@ -11,6 +11,7 @@
     "client": "node client.js"
   },
   "dependencies": {
+    "crypto": "^1.0.1",
     "prompt-sync": "^4.2.0",
     "ws": "^8.21.1"
   }
