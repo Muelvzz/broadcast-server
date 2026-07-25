@@ -4,31 +4,38 @@ import { PORT, prompt } from "./core/config.js"
 
 const wss = new WebSocketServer({ port: PORT })
 
-console.log("Server initialized")
+console.log("Server initialized\n")
 
-const startInput = prompt("")
-console.log(startInput)
+while (true) {
 
-if (startInput.trim().toLowerCase() === "broadcast-server start") {
-  console.log("Broadcast Server started")
-
-  wss.on("connection", (ws) => {
-    console.log("New client connected");
-    ws.send("Welcome to the 'broadcast-server' Server")
+  const serverInput = prompt("")
   
-    ws.on("message", (message) => {
-      console.log(`Received: ${message}`)
-      ws.send(`Server received: ${message}`)
+  if (serverInput.trim().toLowerCase() === "broadcast-server start") {
+    console.log("Broadcast Server started\n")
+  
+    wss.on("connection", (ws) => {
+      console.log("New client connected");
+      ws.send("Welcome to the 'broadcast-server' Server")
+    
+      ws.on("message", (message) => {
+        console.log(`Received: ${message}`)
+        ws.send(`Server received: ${message}`)
+      })
+    
+      ws.on("close", () => {
+        console.log("Client disconnected")
+      })
     })
   
-    ws.on("close", () => {
-      console.log("Client disconnected")
-    })
-  })
+  } else if (serverInput.length === 0) {
+  
+    console.log("Server stop")
+    process.exit(0)
+  
+  } else {
 
-} else {
+    console.log("Invalid input\n")
 
-  console.log("Server stop")
-  process.exit(0)
+  }
 
 }
