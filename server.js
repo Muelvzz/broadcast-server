@@ -1,7 +1,10 @@
 import { WebSocketServer } from "ws"
-import { randomUUID } from "crypto"
 
 import { PORT, prompt } from "./core/config.js"
+
+import { connectedClient } from "./server/connectedClient.js"
+import { msgToClient } from "./server/msgToClient.js"
+import { close } from "./server/close.js"
 
 const wss = new WebSocketServer({ port: PORT })
 let connectedCount = 0
@@ -18,19 +21,12 @@ if (serverInput.trim().toLowerCase() === "broadcast-server start") {
   wss.on("connection", (ws) => {
     connectedCount++
 
-    ws.id = randomUUID()
-    ws.userName = `User ${connectedCount}`
-    userList.push(ws.userName)
+    const newClient = connectedClient(ws, connectedCount, userList)
+    console.log(`New client connected as ${newClient}`);
 
-    console.log(`New client connected as ${ws.userName}`);
-  
-    ws.on("message", (message) => {
-      console.log(`Received: ${message}`)
-    })
-  
-    ws.on("close", () => {
-      console.log("Client disconnected")
-    })
+    msgToClient(ws)
+    close(ws)
+
   })
 
 }
