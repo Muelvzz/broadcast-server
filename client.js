@@ -2,27 +2,20 @@ import { WebSocket } from "ws"
 import { PORT, prompt } from "./core/config.js"
 import { promptForMessage } from "./utils/promptForMessage.js"
 
+import { connectToServer } from "./client/connectToServer.js"
+import { msgFromServer } from "./client/msgFromServer.js"
+import { errorSErver } from "./client/errorServer.js"
+import { closeServer } from "./client/closeServer.js"
+
 const ws = new WebSocket(`ws://localhost:${PORT}`)
 
 const clientInput = prompt("")
-if (clientInput.trim().toLowerCase() === "broadcast-server connect") {
-  console.log("Client connected to the server")
 
-  ws.on("open", () => {
-    console.log("Connected to the WebSocket server")
-    promptForMessage(ws)
-  })
+if (clientInput.trim().toLowerCase() === "broadcast-server connect") {
+
+  connectToServer(ws)
+  msgFromServer(ws)
+  errorSErver(ws)
+  closeServer(ws)
   
-  ws.on("message", (message) => {
-    console.log(`Server: ${message}`)
-  })
-  
-  ws.on("error", (error) => {
-    console.error("WebSocket error: ", error)
-  })
-  
-  ws.on("close", () => {
-    console.log("Disconnected from the server")
-    process.exit(0)
-  })
 }

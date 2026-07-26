@@ -8,6 +8,5 @@ export function promptForMessage(ws) {
       return
     }
     ws.send(message)
-    promptForMessage()
   })
 }
