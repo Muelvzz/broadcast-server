@@ -1,12 +1,11 @@
-import WebSocket from "ws"
+import { WebSocket } from "ws"
+import { appendLog } from "./utils/appendLog.js"
 
-const socket = new WebSocket(`ws://localhost:3000`)
+// create the socket client
+const socket = new WebSocket("ws://localhost:8080")
 
+// client is connected to the server
 socket.on("open", () => {
-  console.log("Connected to server")
-  socket.send("Hello everyone")
-})
-
-socket.on("message", (event) => {
-  console.log("Message: ", event.data)
+  console.log("CONNECTED: ws://localhost:8080")
+  appendLog("[SYSTEM]", "Tunnel Established")
 })

@@ -7,7 +7,7 @@
   "type": "module",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "connect": "node client.js"
+    "server": "node --watch server.js",
+    "client": "node --watch client.js"
   }
 }
