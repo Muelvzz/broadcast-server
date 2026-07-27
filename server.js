@@ -1,26 +1,28 @@
-import { WebSocketServer } from "ws"
+import { WebSocketServer, WebSocket } from "ws"
+import { appendLog } from "./utils/appendLog.js"
+import { randomUsername } from "./utils/randomUsername.js"
 
-import { PORT, prompt } from "./core/config.js"
+// create the server socket
+const wss = new WebSocketServer({ port:8080 })
+let activeUsernames = []
 
-const wss = new WebSocketServer({ port: PORT })
-
-console.log("Server initialized\n")
+// Connection event
+wss.on("connection", (socket, request) => {
+  const ip = request.socket.remoteAddress
   
-const serverInput = prompt("")
+  const name = randomUsername(activeUsernames)
+  activeUsernames.push(name)
+  socket.userName = name
 
-if (serverInput.trim().toLowerCase() === "broadcast-server start") {
-  console.log("Broadcast Server started\n")
+  // Server sends the username
+  socket.send(JSON.stringify({
+    type: "[INIT_USERNAME]",
+    username: name
+  }))
 
-  wss.on("connection", (ws) => {
-    console.log("New client connected");
-  
-    ws.on("message", (message) => {
-      console.log(`Received: ${message}`)
-    })
-  
-    ws.on("close", () => {
-      console.log("Client disconnected")
-    })
+  // Closed event
+  socket.on("close", (ws) => {
+    activeUsernames = activeUsernames.filter(name => name !== socket.userName)
+    console.log(appendLog("[SYSTEM]", `${name} is disconnected`))
   })
-
-}
+})

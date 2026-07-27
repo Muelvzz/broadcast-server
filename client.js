@@ -1,28 +1,21 @@
 import { WebSocket } from "ws"
-import { PORT, prompt } from "./core/config.js"
-import { promptForMessage } from "./utils/promptForMessage.js"
+import { appendLog } from "./utils/appendLog.js"
 
-const ws = new WebSocket(`ws://localhost:${PORT}`)
+// create the socket client
+const socket = new WebSocket("ws://localhost:8080")
+let userName
 
-const clientInput = prompt("")
-if (clientInput.trim().toLowerCase() === "broadcast-server connect") {
-  console.log("Client connected to the server")
+// client is connected to the server
+socket.on("open", () => {
+  console.log("CONNECTED: ws://localhost:8080")
+  console.log(appendLog("[SYSTEM]", "Tunnel Established"))
+})
 
-  ws.on("open", () => {
-    console.log("Connected to the WebSocket server")
-    promptForMessage(ws)
-  })
-  
-  ws.on("message", (message) => {
-    console.log(`Server: ${message}`)
-  })
-  
-  ws.on("error", (error) => {
-    console.error("WebSocket error: ", error)
-  })
-  
-  ws.on("close", () => {
-    console.log("Disconnected from the server")
-    process.exit(0)
-  })
-}
+// client receives the username
+socket.once("message", (data) => {
+  const parsedData = JSON.parse(data.toString())
+  if (parsedData.type === "[INIT_USERNAME]") {
+    userName = parsedData.username
+    console.log("Username successfully set once: ", userName)
+  }
+})

@@ -7,11 +7,7 @@
   "type": "module",
   "main": "server.js",
   "scripts": {
-    "server": "node server.js",
-    "client": "node client.js"
-  },
-  "dependencies": {
-    "prompt-sync": "^4.2.0",
-    "ws": "^8.21.1"
+    "server": "node --watch server.js",
+    "client": "node --watch client.js"
   }
 }
