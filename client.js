@@ -9,10 +9,9 @@ let userName
 socket.on("open", () => {
   console.log("CONNECTED: ws://localhost:8080")
   console.log(appendLog("[SYSTEM]", "Tunnel Established"))
-  
 })
 
-// client receives a message
+// client receives the username
 socket.once("message", (data) => {
   const parsedData = JSON.parse(data.toString())
   if (parsedData.type === "[INIT_USERNAME]") {

@@ -4,17 +4,25 @@ import { randomUsername } from "./utils/randomUsername.js"
 
 // create the server socket
 const wss = new WebSocketServer({ port:8080 })
-const activeUsernames = []
+let activeUsernames = []
 
 // Connection event
 wss.on("connection", (socket, request) => {
   const ip = request.socket.remoteAddress
   
-  const userName = randomUsername(activeUsernames)
-  activeUsernames.push(userName)
+  const name = randomUsername(activeUsernames)
+  activeUsernames.push(name)
+  socket.userName = name
 
+  // Server sends the username
   socket.send(JSON.stringify({
     type: "[INIT_USERNAME]",
-    username: userName
+    username: name
   }))
+
+  // Closed event
+  socket.on("close", (ws) => {
+    activeUsernames = activeUsernames.filter(name => name !== socket.userName)
+    console.log(appendLog("[SYSTEM]", `${name} is disconnected`))
+  })
 })
