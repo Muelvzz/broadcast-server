@@ -13,7 +13,8 @@ wss.on("connection", (socket, request) => {
   const userName = randomUsername(activeUsernames)
   activeUsernames.push(userName)
 
-  appendLog("[SYSTEM]", `Client ${ip} connected as ${userName}`)
-
-  console.log("Connected users: ", activeUsernames)
+  socket.send(JSON.stringify({
+    type: "[INIT_USERNAME]",
+    username: userName
+  }))
 })
