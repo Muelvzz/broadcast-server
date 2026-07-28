@@ -8,6 +8,6 @@
   "main": "server.js",
   "scripts": {
     "server": "node --watch server.js",
-    "client": "node --watch client.js"
+    "client": "node client.js"
   }
 }

@@ -20,6 +20,17 @@ wss.on("connection", (socket, request) => {
     username: name
   }))
 
+  // Server receives the message
+  socket.on("message", (data) => {
+    const parsedData = data.toString()
+    
+    wss.clients.forEach((client) => {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(parsedData)
+      }
+    })
+  })
+
   // Closed event
   socket.on("close", (ws) => {
     activeUsernames = activeUsernames.filter(name => name !== socket.userName)
