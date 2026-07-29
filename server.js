@@ -14,6 +14,10 @@ wss.on("connection", (socket, request) => {
   activeUsernames.push(name)
   socket.userName = name
 
+  console.log("---------------------")
+  console.log(appendLog("[SYSTEM]", `New user connected as ${name}`))
+  console.log(appendLog("[SYSTEM]", `List of connected clients: ${activeUsernames}`))
+
   // Server sends the username
   socket.send(JSON.stringify({
     type: "[INIT_USERNAME]",
@@ -32,8 +36,20 @@ wss.on("connection", (socket, request) => {
   })
 
   // Closed event
-  socket.on("close", (ws) => {
+  socket.on("close", () => {
     activeUsernames = activeUsernames.filter(name => name !== socket.userName)
+    console.log("---------------------")
     console.log(appendLog("[SYSTEM]", `${name} is disconnected`))
+
+    if (activeUsernames.length === 0) {
+      console.log(appendLog("[SYSTEM]", "List of connected clients: None"))
+    } else {
+      console.log(appendLog("[SYSTEM]", `List of connected clients: ${activeUsernames}`))
+    }
+  })
+
+  // Error event
+  socket.on("error", (error) => {
+    console.log(appendLog("[SYSTEM]", `Server error: ${error}`))
   })
 })
